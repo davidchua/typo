@@ -129,7 +129,12 @@ module Admin::BaseHelper
     return class_selected_tab if controller.controller_name  =~ /profiles/ 
     class_tab
   end
-  
+ 
+  def class_moderate
+    return class_selected_tab if controller.controller_name  =~ /moderate/ 
+    class_tab
+  end
+
   def alternate_editor
     return 'visual' if current_user.editor == 'simple'
     return 'simple'
@@ -189,8 +194,9 @@ module Admin::BaseHelper
   end
   
   def published_or_not(item)
-    return "<small class='published'>#{_("Published")}</small>" if item.published
-    "<small class='unpublished'>#{_("Unpublished")}</small>"
+    return "<small class='published'>#{_("Published")}</small>" if item.published    
+    "<small class='unpublished'>#{_("Unpublished")}</small>" unless item.state == "moderation_pending"
+    "<small class='unpublished'>Moderation Pending</small>"
   end
   
   def macro_help_popup(macro, text)

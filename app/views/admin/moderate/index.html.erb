@@ -1,0 +1,29 @@
+<% @page_heading = _('Your moderation queue') %>
+<% content_for('tasks') do %>
+  <li><a href='#'>&nbsp;</a></li>
+<% end %>
+
+<% form_remote_tag  :url      => {:action => 'index'},
+  :method   => :get,
+  :name     => 'article',
+  :update   => {:success => 'articleList'},
+  :before   => "Element.show('spinner')",
+  :complete => "Element.hide('spinner')" \
+  do %>
+
+    <%= render :partial => 'drafts' unless Article.drafts.empty? %>
+
+    <table>
+      <tr>
+        <th><%= _("Title") %></th>
+        <th><%= _("Categories") %></th>
+        <th><%= _("Author")%></th>
+        <th><%= _("Date") %></th>
+        <th><%= _("Feedback")%></th>
+      </tr>
+        <tbody id="articleList">
+          <%= render :partial => 'article_list', :object => @articles -%>
+        </tbody>
+      </table>
+    <%end%>
+
