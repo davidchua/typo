@@ -141,6 +141,7 @@ class Admin::ContentController < Admin::BaseController
     get_or_build_article
 
     @macros = TextFilter.available_filters.select { |filter| TextFilterPlugin::Macro > filter }
+    debugger
     @article.published = true
 
     # TODO Test if we can delete the next line. It's delete on nice_permalinks branch
@@ -149,12 +150,14 @@ class Admin::ContentController < Admin::BaseController
     @resources = Resource.find(:all, :conditions => "mime NOT LIKE '%image%'", :order => 'filename')
     @images = Resource.paginate :page => params[:page], :conditions => "mime LIKE '%image%'", :order => 'created_at DESC', :per_page => 10
     @article.attributes = params[:article]
-
     if request.post?
       set_article_author
       save_attachments
       @article.state = "draft" if @article.draft
 
+      if current_user.profile.label == "contributor"
+        @article.state = "moderation_pending"
+      end
       if @article.save
         destroy_the_draft unless @article.draft
         set_article_categories

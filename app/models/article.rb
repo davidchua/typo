@@ -47,6 +47,8 @@ class Article < Content
 
   has_and_belongs_to_many :tags, :foreign_key => 'article_id'
 
+  named_scope :pending_moderation,{
+              :conditions => ['state =?', 'moderation_pending']}
   named_scope :category, lambda {|category_id| {:conditions => ['categorizations.category_id = ?', category_id], :include => 'categorizations'}}
   named_scope :drafts, :conditions => ['state = ?', 'draft']
   named_scope :without_parent, {:conditions => {:parent_id => nil}}
@@ -66,7 +68,7 @@ class Article < Content
   has_state(:state,
             :valid_states  => [:new, :draft,
                                :publication_pending, :just_published, :published,
-                               :just_withdrawn, :withdrawn],
+                               :just_withdrawn, :withdrawn, :moderation_pending],
             :initial_state =>  :new,
             :handles       => [:withdraw,
                                :post_trigger,
