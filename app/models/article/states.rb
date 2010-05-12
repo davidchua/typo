@@ -188,4 +188,18 @@ module Article::States
       content.state = :publication_pending
     end
   end
+
+  class ModerationPending < Base
+    def enter_hook
+      super
+      content[:published] = false
+      content[:published_at] = nil
+    end
+
+    def published=(boolean)
+    end
+
+    def published_at=(new_time)
+    end
+  end
 end
