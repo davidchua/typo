@@ -195,7 +195,7 @@ module Admin::BaseHelper
   
   def published_or_not(item)
     return "<small class='published'>#{_("Published")}</small>" if item.published    
-    "<small class='unpublished'>#{_("Unpublished")}</small>" unless item.state == "moderation_pending"
+    return "<small class='unpublished'>#{_("Unpublished")}</small>" unless item.state == "moderation_pending"
     "<small class='unpublished'>Moderation Pending</small>"
   end
   
